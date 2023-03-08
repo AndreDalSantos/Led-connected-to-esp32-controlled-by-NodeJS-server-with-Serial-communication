@@ -1,11 +1,13 @@
 #include <Arduino.h>
 
 const short led = 14;
-const short button = 14;
+const short button = 12;
 
 char led_status = 'd';
+char last_led_status = 0;
 
-void ledControl();
+void serialLedControl();
+void buttonLedControl();
 
 void setup()
 {
@@ -16,11 +18,13 @@ void setup()
 
 void loop()
 {
-  ledControl();
+  serialLedControl();
+  delay(100);
+  buttonLedControl();
   delay(100);
 }
 
-void ledControl()
+void serialLedControl()
 {
   if (Serial.available() > 0)
   {
@@ -37,6 +41,29 @@ void ledControl()
       led_status = 'd';
     }
 
-    Serial.print(led_status);    
+    if (last_led_status != led_status)
+    {
+      Serial.print(led_status);
+      last_led_status = led_status;
+    }
+  }
+}
+
+void buttonLedControl()
+{
+  if (!digitalRead(button))
+  {
+    digitalWrite(led, !digitalRead(led));
+    led_status = led_status == 'l' ? 'd' : 'l';
+    delay(200);
+
+    if (Serial.availableForWrite() > 0)
+    {
+      if (last_led_status != led_status)
+      {
+        Serial.print(led_status);
+        last_led_status = led_status;
+      }
+    }
   }
 }
