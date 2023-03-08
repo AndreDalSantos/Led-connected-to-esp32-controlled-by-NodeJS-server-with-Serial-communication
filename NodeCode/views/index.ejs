@@ -4,46 +4,83 @@
 <head>
   <title>ESP32 LED control</title>
   <style>
+    body {
+      background-color: rgb(68, 53, 53);
+      font-family: sans-serif;
+    }
+
     .container {
       border: 2px solid black;
-      margin: 20px auto;
+      margin: 60px auto;
       text-align: center;
       padding: 20px;
-      max-width: 600px;
+      max-width: 450px;
       background-color: rgb(152, 152, 218);
+      border-radius: 20px;
     }
 
-    h1 {
+    .status-led {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+    }
+
+    #led-on-or-off {
+      font-size: 40px;
+      margin: 10px;
+    }
+
+    h2 {
       display: inline-block;
+      font-size: 40px;
     }
 
-    .circle {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
+    .led {
+      width: auto;
+      height: 60px;
+      border-radius: 10px;
       border: 2px solid black;
-      display: inline-block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-left: 10px;
       background-color: gray;
       vertical-align: middle;
     }
 
-    .circle.on {
-      background-color: lightgreen;
+    .led.on {
+      background-color: rgb(243, 247, 6);
     }
 
     form {
       display: inline-block;
       margin: 10px;
     }
+
+    button {
+      font-size: 25px;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    #turnOnButton {
+      background-color: rgb(243, 247, 6);
+    }
+
+    #turnOffButton {
+      background-color: gray;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div>
-      <h1>Status do LED:</h1>
-      <div class="circle"></div>
+    <div class="status-led">
+      <h2>Status do LED:</h2>
+      <div class="led">
+        <div id="led-on-or-off"></div>
+      </div>
     </div>
     <div>
       <form action="/led/on" method="post">
@@ -59,11 +96,13 @@
       fetch('/status')
         .then(response => response.json())
         .then(data => {
-          const circle = document.querySelector('.circle');
+          const led = document.querySelector('.led');
           if (data.status === 'Ligado') {
-            circle.classList.add('on');
+            led.classList.add('on');
+            document.querySelector('#led-on-or-off').innerText = ` ON `;
           } else {
-            circle.classList.remove('on');
+            led.classList.remove('on');
+            document.querySelector('#led-on-or-off').innerText = ` OFF `;
           }
         });
     }, 500);

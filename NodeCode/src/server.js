@@ -19,37 +19,37 @@ let commandSent = false;
 app.set('view engine', 'ejs');
 
 port.on('readable', function () {
-    const data = port.read();
-  
-    const auxiliarValue = data.toString();
-  
-    if (auxiliarValue === 'l' || auxiliarValue === 'd') {
-      status = data.toString() === 'l' ? 'Ligado' : data.toString() === 'd' ? 'Desligado' : data.toString();
-      app.get('/status', (req, res) => {
-        res.send({ status });
-      });
-    }
-  });
+  const data = port.read();
 
-  app.get("/", (req, res) => {
-    if (!commandSent) {
-      port.write('2\n');
-      commandSent = true;
-    }
-  
-    res.render('index', { status });
-  });
-  
-  app.post('/led/on', (req, res) => {
-    port.write('1\n');
-    return res.redirect('/');
-  });
-  
-  app.post('/led/off', (req, res) => {
-    port.write('0\n');
-    return res.redirect('/');
-  });
-  
-  app.listen(serverPort, () => {
-    console.log(`Listening on port ${serverPort}`);
-  });
+  const auxiliarValue = data.toString();
+
+  if (auxiliarValue === 'l' || auxiliarValue === 'd') {
+    status = auxiliarValue === 'l' ? 'Ligado' : auxiliarValue === 'd' ? 'Desligado' : auxiliarValue;
+    app.get('/status', (req, res) => {
+      res.send({ status });
+    });
+  }
+});
+
+app.get("/", (req, res) => {
+  if (!commandSent) {
+    port.write('2\n');
+    commandSent = true;
+  }
+
+  res.render('index', { status });
+});
+
+app.post('/led/on', (req, res) => {
+  port.write('1\n');
+  return res.redirect('/');
+});
+
+app.post('/led/off', (req, res) => {
+  port.write('0\n');
+  return res.redirect('/');
+});
+
+app.listen(serverPort, () => {
+  console.log(`Listening on port ${serverPort}`);
+});
