@@ -41,7 +41,7 @@ void serialLedControl()
       led_status = 'd';
     }
 
-    if (last_led_status != led_status)
+    if (last_led_status != led_status || command == "2")
     {
       Serial.print(led_status);
       last_led_status = led_status;

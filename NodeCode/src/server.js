@@ -13,7 +13,6 @@ const app = express();
 
 const serverPort = 3000;
 
-let temporaryValue = "";
 let status = 'Desligado';
 let commandSent = false;
 
@@ -23,8 +22,6 @@ port.on('readable', function () {
     const data = port.read();
   
     const auxiliarValue = data.toString();
-  
-    temporaryValue += auxiliarValue;
   
     if (auxiliarValue === 'l' || auxiliarValue === 'd') {
       status = data.toString() === 'l' ? 'Ligado' : data.toString() === 'd' ? 'Desligado' : data.toString();
