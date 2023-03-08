@@ -3,43 +3,70 @@
 
 <head>
   <title>ESP32 LED control</title>
+  <style>
+    .container {
+      border: 2px solid black;
+      margin: 20px auto;
+      text-align: center;
+      padding: 20px;
+      max-width: 600px;
+    }
+
+    h1 {
+      display: inline-block;
+    }
+
+    .circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid black;
+      display: inline-block;
+      margin-left: 10px;
+      background-color: gray;
+      vertical-align: middle;
+    }
+
+    .circle.on {
+      background-color: lightgreen;
+    }
+
+    form {
+      display: inline-block;
+      margin: 10px;
+    }
+  </style>
 </head>
 
 <body>
-  <div>
+  <div class="container">
     <div>
-      <div>
-        <h1 id="statusMessage">Status do LED: <%= status %>
-        </h1>
-      </div>
-
-      <div>
-        <form action="/led/on" method="post">
-          <button id="turnOnButton" type="submit">Ligar LED</button>
-        </form>
-      </div>
-
-      <br>
-
-      <div>
-        <form action="/led/off" method="post">
-          <button id="turnOffButton" type="submit">Desligar LED</button>
-        </form>
-      </div>
+      <h1>Status do LED:</h1>
+      <div class="circle"></div>
     </div>
-
+    <div>
+      <form action="/led/on" method="post">
+        <button id="turnOnButton" type="submit">Ligar LED</button>
+      </form>
+      <form action="/led/off" method="post">
+        <button id="turnOffButton" type="submit">Desligar LED</button>
+      </form>
+    </div>
   </div>
-
   <script>
     setInterval(() => {
       fetch('/status')
         .then(response => response.json())
         .then(data => {
-          document.querySelector('#statusMessage').innerText = `Status do LED: ${data.status}`;
+          const circle = document.querySelector('.circle');
+          if (data.status === 'Ligado') {
+            circle.classList.add('on');
+          } else {
+            circle.classList.remove('on');
+          }
         });
     }, 500);
   </script>
 </body>
-
 
 </html>
